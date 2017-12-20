@@ -14,8 +14,6 @@ let SCREEN_WIDTH = UIScreen.main.bounds.size.width
 /// ScreenHeight
 let SCREEN_HEIGHT = UIScreen.main.bounds.size.height
 
-
-
 //MARK: - customTools
 
 /// 找到view所在的controller
@@ -48,7 +46,7 @@ func synchronized(_ lock: AnyObject, closure: ()->()) {
     objc_sync_exit(lock)
 }
 
-typealias Task = (_ cancel: Bool)->()
+typealias myTask = (_ cancel: Bool)->()
 /// 延时执行函数
 ///
 /// - Parameters:
@@ -56,15 +54,15 @@ typealias Task = (_ cancel: Bool)->()
 ///   - task: 要执行的闭包
 /// - Returns: 可取消的可执行闭包
 @discardableResult
-func dealy(_ time: TimeInterval, task:@escaping ()->()) -> Task? {
+func dealy(_ time: TimeInterval, task:@escaping ()->()) -> myTask? {
     
     func dispatch_later(closure:@escaping ()->()) {
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + time, execute: closure)
     }
     
     var closure: (()->())? = task
-    var result: Task?
-    let dealyedClosure: Task = {
+    var result: myTask?
+    let dealyedClosure: myTask = {
         cancel in
         if let closure = closure {
             if cancel == false {
@@ -103,11 +101,30 @@ extension Int {
 }
 
 /// Debug输出
-func printLog<T>(_ message: T, file: String = #file, method: String = #function, line: Int = #line) {
+func printLog<T>(_ message: T..., file: String = #file, method: String = #function, line: Int = #line) {
     #if DEBUG
         print("\((file as NSString).lastPathComponent)[\(line)],\(method):\(message)")
     #endif
 }
 
+/// 日期格式化
+let timeFormatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "YYYY-MM-dd"
+    return formatter
+}()
 
+
+/// 适配iOS 11 取消automaticallyAdjustsScrollViewInsets
+///
+/// - Parameters:
+///   - controller: UIViewController
+///   - view: UIScrollView
+func adjustsScrollViewInsetNever(_ controller: UIViewController, _ view: UIScrollView) {
+    if #available(iOS 11.0, *) {
+        view.contentInsetAdjustmentBehavior = .never
+    } else {
+        controller.automaticallyAdjustsScrollViewInsets = false
+    }
+}
 

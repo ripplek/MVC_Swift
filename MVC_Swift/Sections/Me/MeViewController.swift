@@ -8,11 +8,12 @@
 
 import UIKit
 
-class MeViewController: UIViewController {
+class MeViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        view.backgroundColor = UIColor.white
+        title = "我的"
         // Do any additional setup after loading the view.
     }
 

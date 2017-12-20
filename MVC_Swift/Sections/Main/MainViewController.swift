@@ -45,7 +45,12 @@ class MainViewController: UITabBarController {
                     namespace = namespace.replacingOccurrences(of: "-", with: "_")
                 }
                 let controller = NSClassFromString(namespace + "." + controllerString) as! UIViewController.Type
-                let navigationController = UINavigationController(rootViewController: controller.init())
+                var navigationController: BaseNavigationController
+                if controller is HomeViewController.Type {
+                    navigationController = BaseNavigationController(rootViewController: R.storyboard.home.knowledgeViewController()!)
+                } else {
+                    navigationController = BaseNavigationController(rootViewController: controller.init())
+                }
                 let barItem = UITabBarItem(title: tabbar[kMenuItemTitle].string, image: UIImage(named: tabbar[kMenuItemNormalIcon].string!)?.withRenderingMode(.alwaysOriginal), selectedImage: UIImage(named: tabbar[kMenuItemNormalIconSelect].string!)?.withRenderingMode(.alwaysOriginal))
                 barItem.setTitleTextAttributes([NSAttributedStringKey.foregroundColor : 0x101010.color], for: .normal)
                 barItem.setTitleTextAttributes([NSAttributedStringKey.foregroundColor : 0xf04447.color], for: .selected)
